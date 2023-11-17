@@ -1,0 +1,10 @@
+addi x1, x0, 10
+addi x2, x0, 20
+bne x1, x2, Label
+addi x3, x0, 30
+and x5, x3, x1
+Label:
+addi x4, x0, 40
+addi x3, x0, 521
+and x5, x3, x1
+or x7, x5, x3
