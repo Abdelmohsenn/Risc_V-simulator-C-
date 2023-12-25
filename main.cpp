@@ -85,104 +85,104 @@ int jal(string labelName, const vector<string> operands);
 map<int, int> initialize_registers() {
     ifstream file("/Users/muhammadabdelmohsen/Desktop/ProjectAssembly/registers.txt");
     string line;
-
+    
     while (getline(file, line)) {
         istringstream iss(line);
         string reg_name, pseudo_name;
         iss >> reg_name >> pseudo_name;
-
+        
         if (reg_name == "") continue;
-
+        
         registers[reg_num] = 0;
         --reg_num;
     }
-
+    
     return registers;
 }
 void PrintingANDupdatingRegs(){
     // Print out the register values
-   
+    
     for (int i = 0; i < registers.size(); i++) {
         int reg_num = i;
         int value = registers[reg_num];
         cout << "x"<< reg_num << " = " << value << endl;
     }
-   
-      for (int i = 0; i < registers.size(); i++) {
+    
+    for (int i = 0; i < registers.size(); i++) {
         int reg_num = i;
         int value = registers[reg_num];
-       
+        
     }
- 
+    
 } ifstream files("/Users/muhammadabdelmohsen/Desktop/ProjectAssembly/data.txt");
 
-    void ReadAndExecute() {
-      
-        vector<pair<string, int>> instructions; // pair of instruction and address
-
-        ifstream file("/Users/muhammadabdelmohsen/Desktop/ProjectAssembly/instructions.txt");
-         string lines;
-         int addresss;
-         int vall;
-         while (getline(files, lines)) {
-             // Parse operands from instruction
-             string ad = lines.substr(0,lines.find(','));
-             addresss=stoi(ad);
-             addresss=addresss/4;
-             string  val =lines.substr(lines.find(',')+1);
-             vall=stoi(val);
-             memory[addresss]= vall;
-         }
-        cout<<"Memory:\n";
-         for(int i=0;i<50;i++)
-         {cout<<memory[i]<<endl;}
-        string Line;
-        int Counterr=1;
-        vector<string> operands;
-        // Read instructions and store them in the instructions vector
-        while (!file.eof()) {
-            // Parse operands from instruction
-            getline(file, Line);
-            istringstream iss(Line);
-            instructions.push_back(make_pair(Line, PC));
-            PC+=4;
-        }
-        PC=0x100;
-
-        for(int i=0;i<instructions.size();i++){
-            istringstream iss(instructions[i].first);
-            string l=iss.str();
-            if (l.back()== ':') {
+void ReadAndExecute() {
+    
+    vector<pair<string, int>> instructions; // pair of instruction and address
+    
+    ifstream file("/Users/muhammadabdelmohsen/Desktop/ProjectAssembly/instructions.txt");
+    string lines;
+    int addresss;
+    int vall;
+    while (getline(files, lines)) {
+        // Parse operands from instruction
+        string ad = lines.substr(0,lines.find(','));
+        addresss=stoi(ad);
+        addresss=addresss/4;
+        string  val =lines.substr(lines.find(',')+1);
+        vall=stoi(val);
+        memory[addresss]= vall;
+    }
+    cout<<"Memory:\n";
+    for(int i=0;i<50;i++)
+    {cout<<memory[i]<<endl;}
+    string Line;
+    int Counterr=1;
+    vector<string> operands;
+    // Read instructions and store them in the instructions vector
+    while (!file.eof()) {
+        // Parse operands from instruction
+        getline(file, Line);
+        istringstream iss(Line);
+        instructions.push_back(make_pair(Line, PC));
+        PC+=4;
+    }
+    PC=0x100;
+    
+    for(int i=0;i<instructions.size();i++){
+        istringstream iss(instructions[i].first);
+        string l=iss.str();
+        if (l.back()== ':') {
             l.pop_back();
             labels.insert(make_pair(instructions[i].second,l));
-                    
-            }
-           
+            
         }
-     auto entry=instructions.begin();
-     bool branch=false;
-     while( entry!=instructions.end()) {
+        
+    }
+    auto entry=instructions.begin();
+    bool branch=false;
+    while( entry!=instructions.end()) {
         if (entry->second == PC) {
-     
-         istringstream iss(entry->first);
-           do {
-         string operand;
-         iss>>operand;
-        operands.push_back(operand);
-     
-      
-        } while (iss);
-
-         }
-          for (int j=0;j<operands.size();j++)
-            {cout<<operands[j]<<" ";}
-
-            if (operands[0] == "lw") {
-                lw(Line);
-               PC += 4;
+            
+            istringstream iss(entry->first);
+            do {
+                string operand;
+                iss>>operand;
+                operands.push_back(operand);
+                
+                
+            } while (iss);
+            
+        }
+        for (int j=0;j<operands.size();j++)
+        {cout<<operands[j]<<" ";}
+        
+        if (operands[0] == "lw") {
+            lw(Line);
+            PC += 4;
         } else if (operands[0] == "lh") {
             lh(Line);
-           
+            
             PC += 4;
         } else if (operands[0] == "lhu") {
             lhu(Line);
@@ -197,9 +197,9 @@ void PrintingANDupdatingRegs(){
                 return;
             }
             else{
-            int value = registers[reg_num];
-            sh(static_cast<uint16_t>(value), address);
-            PC += 4;}
+                int value = registers[reg_num];
+                sh(static_cast<uint16_t>(value), address);
+                PC += 4;}
         }else if (operands[0] == "sw") {
             int address = stoi(operands[2]);
             int reg_num = stoi(operands[1].substr(1));
@@ -207,21 +207,21 @@ void PrintingANDupdatingRegs(){
                 return;
             }
             else{
-            int value = registers[reg_num];
-            sw(value, address);
-            PC += 4;}
+                int value = registers[reg_num];
+                sw(value, address);
+                PC += 4;}
         } // Check for load immediate (li) instruction and execute it
         else if (operands[0] == "lb") {
-        int offset = stoi(operands[2]);
-        int reg_num = stoi(operands[1].substr(1));
-        lb(Line);
-        PC += 4;
+            int offset = stoi(operands[2]);
+            int reg_num = stoi(operands[1].substr(1));
+            lb(Line);
+            PC += 4;
         } else if (operands[0] == "sb") {
-        int address = stoi(operands[2]);
-        int reg_num = stoi(operands[1].substr(1));
-        int8_t value = registers[reg_num] & 0xff;
-        sb(value, address);
-        PC += 4;
+            int address = stoi(operands[2]);
+            int reg_num = stoi(operands[1].substr(1));
+            int8_t value = registers[reg_num] & 0xff;
+            sb(value, address);
+            PC += 4;
         }  else if (operands[0] == "auipc") {
             auipc(operands);
             PC += 4;
@@ -255,7 +255,7 @@ void PrintingANDupdatingRegs(){
             slli(operands);
             PC += 4;
             registers[0]=0;
-
+            
         } else if (operands[0] == "srai") {
             srai(operands);
             PC += 4;
@@ -292,7 +292,7 @@ void PrintingANDupdatingRegs(){
             srli(operands);
             PC += 4;
             registers[0]=0;
-
+            
         } else if (operands[0].back() == ':') {
             PC += 4;
         } else if (operands[0] == "lui") {
@@ -305,111 +305,111 @@ void PrintingANDupdatingRegs(){
             for (const auto& instruction : instructions) {
                 cout << "Line: " << instruction.first << ", PC: " << instruction.second << '\n';
             }
-          
+            
             cout<<"The program Counter= "<<PC<<"\n";
             cout<<"**** Program Terminated With EBREAK ****\n";
             return;
         }
         else if(operands[0]=="jalr"){
-           PC= jalr(operands,PC);
-
+            PC= jalr(operands,PC);
+            
         }
         else if (operands[0]=="jal"){
             auto itt=instructions.begin();
             int nt=0;
             nt= jal(operands[2],operands);
             PC=nt+4;
-        while(itt!=instructions.end())
-        {
-            if(itt->second==nt){
-               branch=true;
-               entry=itt;
-               cout<<entry->second<<" hena gowa al loop\n";
-               break;
+            while(itt!=instructions.end())
+            {
+                if(itt->second==nt){
+                    branch=true;
+                    entry=itt;
+                    cout<<entry->second<<" hena gowa al loop\n";
+                    break;
+                }
+                itt++;
             }
-            itt++;
-        }
-         
-    }    else if (operands[0]=="bne"){
-        auto itt=instructions.begin();
-        int nt=0;
-        nt= bne(operands[2],operands);
-        PC=nt+4;
-        while(itt!=instructions.end())
-        {
-            if(itt->second==nt){
-               branch=true;
-               entry=itt;
-               cout<<entry->second<<" hena gowa al loop\n";
-               break;
+            
+        }    else if (operands[0]=="bne"){
+            auto itt=instructions.begin();
+            int nt=0;
+            nt= bne(operands[2],operands);
+            PC=nt+4;
+            while(itt!=instructions.end())
+            {
+                if(itt->second==nt){
+                    branch=true;
+                    entry=itt;
+                    cout<<entry->second<<" hena gowa al loop\n";
+                    break;
+                }
+                itt++;
             }
-            itt++;
         }
-        }
-    else if (operands[0]=="beq"){
-    auto itt=instructions.begin();
-    int nt=0;
-    nt= beq(operands[2],operands);
-    PC=nt+4;
-    while(itt!=instructions.end())
-    {
-        if(itt->second==nt){
-           branch=true;
-           entry=itt;
-           cout<<entry->second<<" hena gowa al loop\n";
-           break;
-        }
-        itt++;
-    }
-     
-    } else if (operands[0]=="blt"){
-        auto itt=instructions.begin();
-        int nt=0;
-        nt= blt(operands[2],operands);
-        PC=nt+4;
-        while(itt!=instructions.end())
-        {
-            if(itt->second==nt){
-               branch=true;
-               entry=itt;
-               cout<<entry->second<<" hena gowa al loop\n";
-               break;
+        else if (operands[0]=="beq"){
+            auto itt=instructions.begin();
+            int nt=0;
+            nt= beq(operands[2],operands);
+            PC=nt+4;
+            while(itt!=instructions.end())
+            {
+                if(itt->second==nt){
+                    branch=true;
+                    entry=itt;
+                    cout<<entry->second<<" hena gowa al loop\n";
+                    break;
+                }
+                itt++;
             }
-            itt++;
-        }
-        }
-    else if (operands[0]=="bge"){
-    auto itt=instructions.begin();
-    int nt=0;
-    nt= bge(operands[2],operands);
-    PC=nt+4;
-    while(itt!=instructions.end())
-    {
-        if(itt->second==nt){
-           branch=true;
-           entry=itt;
-           cout<<entry->second<<" hena gowa al loop\n";
-           break;
-        }
-        itt++;
-    }
-     
-    } else if (operands[0]=="bgtu"){
-        auto itt=instructions.begin();
-        int nt=0;
-        nt= bgeu(operands[2],operands);
-        PC=nt+4;
-        while(itt!=instructions.end())
-        {
-            if(itt->second==nt){
-               branch=true;
-               entry=itt;
-               cout<<entry->second<<" hena gowa al loop\n";
-               break;
+            
+        } else if (operands[0]=="blt"){
+            auto itt=instructions.begin();
+            int nt=0;
+            nt= blt(operands[2],operands);
+            PC=nt+4;
+            while(itt!=instructions.end())
+            {
+                if(itt->second==nt){
+                    branch=true;
+                    entry=itt;
+                    cout<<entry->second<<" hena gowa al loop\n";
+                    break;
+                }
+                itt++;
             }
-            itt++;
         }
-         
+        else if (operands[0]=="bge"){
+            auto itt=instructions.begin();
+            int nt=0;
+            nt= bge(operands[2],operands);
+            PC=nt+4;
+            while(itt!=instructions.end())
+            {
+                if(itt->second==nt){
+                    branch=true;
+                    entry=itt;
+                    cout<<entry->second<<" hena gowa al loop\n";
+                    break;
+                }
+                itt++;
+            }
+            
+        } else if (operands[0]=="bgtu"){
+            auto itt=instructions.begin();
+            int nt=0;
+            nt= bgeu(operands[2],operands);
+            PC=nt+4;
+            while(itt!=instructions.end())
+            {
+                if(itt->second==nt){
+                    branch=true;
+                    entry=itt;
+                    cout<<entry->second<<" hena gowa al loop\n";
+                    break;
+                }
+                itt++;
+            }
+            
         }else if (operands[0]=="bltu"){
             auto itt=instructions.begin();
             int nt=0;
@@ -418,30 +418,30 @@ void PrintingANDupdatingRegs(){
             while(itt!=instructions.end())
             {
                 if(itt->second==nt){
-                   branch=true;
-                   entry=itt;
-                   cout<<entry->second<<" hena gowa al loop\n";
-                   break;
+                    branch=true;
+                    entry=itt;
+                    cout<<entry->second<<" hena gowa al loop\n";
+                    break;
                 }
                 itt++;
             }
-             
-            }
-         entry++;
-         cout<<"\n";
-            cout<<"The registers after "<<Counterr<<" Instructions "<<"\n";
-            cout<<"With Program Counter " <<PC<<" of the next instruction:\n";
-          
-      PrintingANDupdatingRegs();
             
+        }
+        entry++;
+        cout<<"\n";
+        cout<<"The registers after "<<Counterr<<" Instructions "<<"\n";
+        cout<<"With Program Counter " <<PC<<" of the next instruction:\n";
+        
+        PrintingANDupdatingRegs();
+        
         Counterr++;
         operands.clear();
-        }
-     
-         for (const auto& instruction : instructions) {
-             cout << "Line: " << instruction.first << ", PC: " << instruction.second << '\n';
-        }
-         
+    }
+    
+    for (const auto& instruction : instructions) {
+        cout << "Line: " << instruction.first << ", PC: " << instruction.second << '\n';
+    }
+    
 }
 int main(){
     
@@ -451,22 +451,22 @@ int main(){
 }
 int jal(string labelName, const vector<string> operands) {
     // Get the address of the label from the map
-   map <int ,string> :: iterator iter;
-   for (iter = labels.begin(); iter != labels.end(); iter++)
-            {
-                 if(operands[2]==(*iter).second){
-                    int rd = stoi(operands[1].substr(1));
-                    registers[rd] = PC + 4;
-                    return (*iter).first;
-                }
-            }
+    map <int ,string> :: iterator iter;
+    for (iter = labels.begin(); iter != labels.end(); iter++)
+    {
+        if(operands[2]==(*iter).second){
+            int rd = stoi(operands[1].substr(1));
+            registers[rd] = PC + 4;
+            return (*iter).first;
+        }
+    }
     return 1;
 }
 int beq(string labelName, const vector<string> operands) {
     int rs1 = stoi(operands[1].substr(1));
     int rs2 = stoi(operands[2].substr(1));
     labelName=operands[3];
-
+    
     if (registers[rs1] == registers[rs2]) {
         // Get the address of the label from the map
         map <int ,string> :: iterator iter;
@@ -486,7 +486,7 @@ int bne(string labelName, const vector<string> operands) {
     int rs1 = stoi(operands[1].substr(1));
     int rs2 = stoi(operands[2].substr(1));
     labelName=operands[3];
-
+    
     if (registers[rs1] != registers[rs2]) {
         // Get the address of the label from the map
         map <int ,string> :: iterator iter;
@@ -503,7 +503,7 @@ int bge(string labelName, const vector<string> operands) {
     int rs1 = stoi(operands[1].substr(1));
     int rs2 = stoi(operands[2].substr(1));
     labelName=operands[3];
-
+    
     if (registers[rs1] >= registers[rs2]) {
         // Get the address of the label from the map
         map <int ,string> :: iterator iter;
@@ -520,7 +520,7 @@ int blt(string labelName, const vector<string> operands) {
     int rs1 = stoi(operands[1].substr(1));
     int rs2 = stoi(operands[2].substr(1));
     labelName=operands[3];
-
+    
     if (registers[rs1] <= registers[rs2]) {
         // Get the address of the label from the map
         map <int ,string> :: iterator iter;
@@ -551,7 +551,7 @@ int bltu(string labelName, const vector<string> operands) {
     int rs1 = stoi(operands[1].substr(1));
     int rs2 = stoi(operands[2].substr(1));
     labelName = operands[3];
-
+    
     if (static_cast<unsigned int>(registers[rs1]) < static_cast<unsigned int>(registers[rs2])) {
         // Get the address of the label from the map
         map<int, string>::iterator iter;
@@ -567,42 +567,42 @@ void addi(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int imm = stoi(operands[3]);
-
+    
     registers[rd] = registers[rs1] + imm;
 }
 void add(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int rs2 = stoi(operands[3].substr(1));
-
+    
     registers[rd] = registers[rs1] + registers[rs2];
 }
 void sub(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int rs2 = stoi(operands[3].substr(1));
-
+    
     registers[rd] = registers[rs1] - registers[rs2];
 }
 void srai(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int imm = stoi(operands[3]);
-
+    
     registers[rd] = ((int32_t)registers[rs1]) >> imm;
 }
 void slli(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int shamt = stoi(operands[3]);
-
+    
     registers[rd] = registers[rs1] << shamt;
 }
 void and_func(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int rs2 = stoi(operands[3].substr(1));
-
+    
     bitset<32> rs1_val(registers[rs1]);
     bitset<32> rs2_val(registers[rs2]);
     bitset<32> result = rs1_val & rs2_val;
@@ -612,7 +612,7 @@ void or_func(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int rs2 = stoi(operands[3].substr(1));
-
+    
     bitset<32> rs1_val(registers[rs1]);
     bitset<32> rs2_val(registers[rs2]);
     bitset<32> result = rs1_val | rs2_val;
@@ -622,7 +622,7 @@ void xor_func(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int rs2 = stoi(operands[3].substr(1));
-
+    
     bitset<32> rs1_val(registers[rs1]);
     bitset<32> rs2_val(registers[rs2]);
     bitset<32> result = rs1_val ^ rs2_val;
@@ -632,68 +632,68 @@ void srli(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int shamt = stoi(operands[3]);
-
+    
     registers[rd] = registers[rs1] >> shamt;
 }
 void sltui(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int imm = stoi(operands[3]);
-
+    
     registers[rd] = ((int)registers[rs1] < imm) ? 1 : 0;
 }
 void ori(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int imm = stoi(operands[3]);
-
+    
     registers[rd] = registers[rs1] | imm;
 }
 void andi(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int imm = stoi(operands[3]);
-
+    
     registers[rd] = registers[rs1] & imm;
 }
 void xori(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int imm = stoi(operands[3]);
-
+    
     registers[rd] = registers[rs1] ^ imm;
 }
 void sltu(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int rs2 = stoi(operands[3].substr(1));
-
+    
     registers[rd] = (registers[rs1] < registers[rs2]) ? 1 : 0;
 }
 void sll(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int shamt = stoi(operands[3]);
-
+    
     registers[rd] = registers[rs1] << shamt;
 }
 void srl(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int shamt = stoi(operands[3]);
-
+    
     registers[rd] = registers[rs1] >> shamt;
 }
 void sra(const vector<string> operands) {
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int shamt = stoi(operands[3]);
-
+    
     registers[rd] = ((int32_t)registers[rs1]) >> shamt;
 }
 
 void lw(string  operands) {
-   istringstream iss(operands);
+    istringstream iss(operands);
     vector<std::string> tokens;
     string token;
     while (iss >> token) {
@@ -708,8 +708,8 @@ void lw(string  operands) {
     int sourceRegister = stoi(thirdToken.substr(openParenthesisPos + 2, closeParenthesisPos - openParenthesisPos - 1));
     int imm = stoi(immediateValue) + registers[sourceRegister];
     int value= memory[imm];
-      registers[destinationRegister]=value;
-
+    registers[destinationRegister]=value;
+    
 }
 void lh(string operands) {
     cout<<operands<<endl;
@@ -738,14 +738,14 @@ void lh(string operands) {
     }
     else if(without[0]=='1')
     {
-       string ones="1111111111111111";
+        string ones="1111111111111111";
         without =(ones+without);
     }
     cout<<without<<endl;
     int with= binaryToDecimal(without);
     cout<<with;
     registers[destinationRegister]=with;
-   
+    
 }
 void lhu(string operands) {
     cout<<operands<<endl;
@@ -767,13 +767,13 @@ void lhu(string operands) {
     string take = decimalToBinary(value);
     string without= take.substr(16, 16);
     cout<<without<<endl;
-        string zeros="0000000000000000";
-        without =(zeros+without);
+    string zeros="0000000000000000";
+    without =(zeros+without);
     cout<<without<<endl;
     int with= binaryToDecimal(without);
     cout<<with;
     registers[destinationRegister]=with;
-   
+    
 }
 
 void sw(uint32_t data, int offset) {
@@ -781,7 +781,7 @@ void sw(uint32_t data, int offset) {
     memory[offset] = data;
 }
 int jalr( const vector<string> operands, int PC) {
-
+    
     int rd = stoi(operands[1].substr(1));
     int rs1 = stoi(operands[2].substr(1));
     int imm = stoi(operands[3]);
@@ -790,10 +790,10 @@ int jalr( const vector<string> operands, int PC) {
     return p = registers[rs1]+imm;
 }
 void sh(uint16_t data, int offset) {
-  int addr = address + offset;
-  
-  uint16_t* mem_ptr = reinterpret_cast<uint16_t*>(&memory[addr / 4]);
-  *mem_ptr = data;
+    int addr = address + offset;
+    
+    uint16_t* mem_ptr = reinterpret_cast<uint16_t*>(&memory[addr / 4]);
+    *mem_ptr = data;
     
 }
 void auipc(const vector<string> operands) {
@@ -830,13 +830,13 @@ void lb(string operands) {
     }
     else if(without[0]=='1')
     {
-       string ones="111111111111111111111111";
+        string ones="111111111111111111111111";
         without =(ones+without);
     }
-   
+    
     int with= binaryToDecimal(without);
     registers[destinationRegister]=with;
-   
+    
 }
 void lbu(string operands) {
     cout<<operands<<endl;
@@ -857,14 +857,14 @@ void lbu(string operands) {
     int value= memory[imm];
     string take = decimalToBinary(value);
     string without= take.substr(24, 8);
-        string zeros="000000000000000000000000";
-        without =(zeros+without);
+    string zeros="000000000000000000000000";
+    without =(zeros+without);
     int with= binaryToDecimal(without);
     registers[destinationRegister]=with;
-   
+    
 }
 
 void lui(int reg_num, int immediate) {
-  
+    
     registers[reg_num] = immediate << 12;
 }
